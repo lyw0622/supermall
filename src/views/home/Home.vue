@@ -31,6 +31,7 @@
     import BackTop from "content/back_top/BackTop";
 
     import {getHomeMultiData, getHomeGoods} from "network/home";
+    import {itemListenerMinxin} from "@/common/mixin"
 
     export default {
         name: "Home",
@@ -84,16 +85,14 @@
             },
             getHomeMultiData() {
                 getHomeMultiData().then(res => {
-                    console.log(res);
-                    this.banners = res.data.banner.list;
-                    this.recommends = res.data.recommend.list;
+                    this.banners = res.data.data.banner.list;
+                    this.recommends = res.data.data.recommend.list;
                 })
             },
             getHomeGoods(type) {
                 const page = this.goods[type].page + 1;
                 getHomeGoods(type, page).then(res => {
-                    console.log(res);
-                    this.goods[type].list.push(...res.data.list);
+                    this.goods[type].list.push(...res.data.data.list);
                     this.goods[type].page += 1;
                 })
             },
@@ -122,13 +121,16 @@
                 this.$refs.scroll && this.$refs.scroll.refresh();
             })
         },
+        mixins: [itemListenerMinxin],
         activated() {
-            this.$refs.scroll.scrollTo(0, this.saveY, 0);
-            this.$refs.scroll.refresh();
+            // this.$refs.scroll.scrollTo(0, this.saveY, 0);
+            // this.$refs.scroll.refresh();
+            this.$bus.$on("goodsImgLoadEvent", this.dbc);
         },
         deactivated() {
-            this.saveY = this.$refs.scroll.getScrollY();
-        },
+            // this.saveY = this.$refs.scroll.getScrollY();
+            this.$bus.$off("goodsImgLoadEvent", this.dbc);
+        }
     }
 </script>
 
