@@ -2,7 +2,7 @@
   <div class="home">
     <nav-bar class="home_nav">
       <div slot="center">
-        购物车
+        购物街
       </div>
     </nav-bar>
     <tab-control class="tab-control" ref="newTabControl" :titles="['流行', '新款', '精选']" @tabClick="tabClick"
@@ -20,17 +20,17 @@
 </template>
 
 <script>
-    import HomeSwiper from "./child/HomeSwiper";
-    import HomeRecommend from "./child/HomeRecommend";
-    import HomeFeature from "./child/HomeFeature";
+    import HomeSwiper from "./child/HomeSwiper"
+    import HomeRecommend from "./child/HomeRecommend"
+    import HomeFeature from "./child/HomeFeature"
 
-    import NavBar from "common/navbar/NavBar";
-    import TabControl from "content/tab_control/TabControl";
-    import GoodsList from "content/goods/GoodsList";
-    import Scroll from "common/scroll/Scroll";
-    import BackTop from "content/back_top/BackTop";
+    import NavBar from "common/navbar/NavBar"
+    import TabControl from "content/tab_control/TabControl"
+    import GoodsList from "content/goods/GoodsList"
+    import Scroll from "common/scroll/Scroll"
+    import BackTop from "content/back_top/BackTop"
 
-    import {getHomeMultiData, getHomeGoods} from "network/home";
+    import {getHomeMultiData, getHomeGoods} from "network/home"
     import {itemListenerMinxin} from "@/common/mixin"
 
     export default {
@@ -108,7 +108,9 @@
             },
             loadMore() {
                 this.getHomeGoods(this.currentType);
-                this.$refs.scroll.finishPullUp();
+                setTimeout(() => {
+                    this.$refs.scroll.finishPullUp();
+                }, 2000)
             }
         },
         computed: {
@@ -116,20 +118,13 @@
                 return this.goods[this.currentType].list
             }
         },
-        mounted() {
-            this.$bus.$on("goodsImageLoad", () => {
-                this.$refs.scroll && this.$refs.scroll.refresh();
-            })
-        },
         mixins: [itemListenerMinxin],
-        activated() {
-            // this.$refs.scroll.scrollTo(0, this.saveY, 0);
-            // this.$refs.scroll.refresh();
-            this.$bus.$on("goodsImgLoadEvent", this.dbc);
+        activated(position) {
+            this.$bus.$on("goodsImgLoadEvent", this.deBounce);
+
         },
         deactivated() {
-            // this.saveY = this.$refs.scroll.getScrollY();
-            this.$bus.$off("goodsImgLoadEvent", this.dbc);
+            this.$bus.$off("goodsImgLoadEvent", this.deBounce);
         }
     }
 </script>

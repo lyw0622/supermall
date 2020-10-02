@@ -15,23 +15,38 @@ const routes = [
   },
   {
     path: '/home',
-    component: Home
+    component: Home,
+    meta: {
+      isShow: true
+    }
   },
   {
     path: '/category',
-    component: Category
+    component: Category,
+    meta: {
+      isShow: true
+    }
   },
   {
     path: '/cart',
-    component: Cart
+    component: Cart,
+    meta: {
+      isShow: true
+    }
   },
   {
     path: '/profile',
-    component: Profile
+    component: Profile,
+    meta: {
+      isShow: true
+    }
   },
   {
     path: '/detail/:id',
-    component: Detail
+    component: Detail,
+    meta: {
+      isShow: false
+    }
   }
 ]
 
