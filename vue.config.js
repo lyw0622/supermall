@@ -11,5 +11,8 @@ module.exports = {
         'views': '@/views'
       }
     }
+  },
+  css: {
+    extract: false
   }
 }

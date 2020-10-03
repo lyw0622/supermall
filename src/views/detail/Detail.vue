@@ -117,7 +117,9 @@
                 cart.desc = this.goodsInfo.desc;
                 cart.price = this.goodsInfo.nowPrice;
                 cart.count = 0;
-                this.$store.dispatch("addToCart", cart);
+                this.$store.dispatch("addToCart", cart).then(res => {
+                    this.$toast.show(res);
+                })
             }
         },
         mounted() {

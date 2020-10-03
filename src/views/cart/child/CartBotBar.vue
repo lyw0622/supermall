@@ -1,6 +1,6 @@
 <template>
   <div class="bottom-menu">
-    <CheckButton class="select-all"></CheckButton>
+    <CheckButton class="select-all" :isChecked="isSelectAll" @click.native="selectAll"></CheckButton>
     <span>全选</span>
     <span class="total-price">合计: ¥{{totalPrice}}</span>
     <span class="buy-product">结算({{totalCount}})</span>
@@ -30,8 +30,20 @@
             },
             totalCount() {
                 return this.cartList.filter(item => item.isChecked).length
+            },
+            isSelectAll() {
+                if (this.cartList.length == 0) return false
+                return this.cartList.every(item => item.isChecked)
             }
-
+        },
+        methods: {
+            selectAll() {
+                if (this.isSelectAll) {  //由全部选中变为全部不选中
+                    this.cartList.forEach(item => item.isChecked = false)
+                } else {  //由全部不选中或部分不选中变为全部选中
+                    this.cartList.forEach(item => item.isChecked = true)
+                }
+            }
         }
     }
 </script>

@@ -3,10 +3,14 @@
     <nav-bar class="cart-nav-bar">
       <div slot="center">购物车<p class="length" v-show="cartListLength != 0">({{cartListLength}})</p></div>
     </nav-bar>
+    <div class="null-cart" v-show="cartListLength == 0">
+      <img src="~assets/img/cart/shopping_cart.svg">
+      <p>您的购物车为空</p>
+    </div>
     <scroll class="content" ref="scroll">
         <cart-list></cart-list>
     </scroll>
-    <cart-bot-bar></cart-bot-bar>
+    <cart-bot-bar v-show="cartListLength != 0"></cart-bot-bar>
   </div>
 </template>
 
@@ -46,6 +50,23 @@
 
   .length {
     display: inline;
+  }
+
+  .null-cart {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .null-cart img {
+    padding-left: 5px;
+  }
+
+  .null-cart p {
+    padding: 10px;
+    text-align: center;
+    font-size: 20px;
   }
 
   .content {
