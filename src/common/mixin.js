@@ -1,16 +1,34 @@
-import { deBounce } from "@/common/deBounce";
+import { deBounce } from "@/common/deBounce"
+import BackTop from "content/back_top/BackTop"
+
 export const itemListenerMinxin = {
   data() {
     return {
-      deBounce: null
-    };
+      goodsImgListener: null,
+      deBounceRefresh: null
+    }
   },
   mounted() {
-    // 防抖
-    let deBounceRefresh = deBounce(this.$refs.scroll.refresh, 50);
-    this.deBounce = () => {
-      //利用 $bus 事件监听，去刷新 scroll的高度
-      deBounceRefresh();
-    };
+    this.deBounceRefresh = deBounce(this.$refs.scroll.refresh, 50)
+    this.goodsImgListener = () => {
+      this.deBounceRefresh();
+    }
+    this.$bus.$on('goodsImgLoadEvent', this.goodsImgListener);
+  }
+}
+
+export const backTopMinxin = {
+  components: {
+    BackTop
+  },
+  data() {
+    return {
+      isShow: false
+    }
+  },
+  methods: {
+    backTop() {
+      this.$refs.scroll.scrollTo(0, 0);
+    },
   }
 };

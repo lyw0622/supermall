@@ -28,10 +28,9 @@
     import TabControl from "content/tab_control/TabControl"
     import GoodsList from "content/goods/GoodsList"
     import Scroll from "common/scroll/Scroll"
-    import BackTop from "content/back_top/BackTop"
 
     import {getHomeMultiData, getHomeGoods} from "network/home"
-    import {itemListenerMinxin} from "@/common/mixin"
+    import {itemListenerMinxin, backTopMinxin} from "@/common/mixin"
 
     export default {
         name: "Home",
@@ -42,8 +41,7 @@
             HomeFeature,
             TabControl,
             GoodsList,
-            Scroll,
-            BackTop
+            Scroll
         },
         data() {
             return {
@@ -55,7 +53,6 @@
                     "sell": {page: 0, list: []}
                 },
                 currentType: "pop",
-                isShow: false,
                 tabOffsetTop: 0,
                 isTabFixed: false,
                 saveY: 0
@@ -96,9 +93,6 @@
                     this.goods[type].page += 1;
                 })
             },
-            backTop() {
-                this.$refs.scroll.scrollTo(0, 0);
-            },
             swiperImageLoad() {
                 this.tabOffsetTop = this.$refs.tabControl.$el.offsetTop;
             },
@@ -118,13 +112,14 @@
                 return this.goods[this.currentType].list
             }
         },
-        mixins: [itemListenerMinxin],
+        mixins: [itemListenerMinxin, backTopMinxin],
         activated(position) {
-            this.$bus.$on("goodsImgLoadEvent", this.deBounce);
-
+            this.$refs.scroll.scrollTo(0, this.saveY, 0);
+            this.$refs.scroll.refresh();
         },
         deactivated() {
-            this.$bus.$off("goodsImgLoadEvent", this.deBounce);
+            this.saveY = this.$refs.scroll.getScrollY();
+            this.$bus.$off('goodsImgLoadEvent', this.goodsImgListener);
         }
     }
 </script>
@@ -143,6 +138,7 @@
   .tab-control {
     position: relative;
     z-index: 1;
+    bottom: 1px;
   }
 
   .content {

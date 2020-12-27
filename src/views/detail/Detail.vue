@@ -25,13 +25,12 @@
     import DetailCommentInfo from "./child/DetailCommentInfo"
     import DetailRecommendInfo from "./child/DetailRecommendInfo"
     import DetailBotBar from "./child/DetailBotBar"
-    import BackTop from "content/back_top/BackTop"
 
     import Scroll from "common/scroll/Scroll";
 
     import {getGoodsDetail, getRecommend, GoodsInfo, ShopInfo, GoodsParams} from 'network/detail'
-    import {itemListenerMinxin} from "@/common/mixin.js"
-    import {deBounce} from "@/common/deBounce.js"
+    import {itemListenerMinxin, backTopMinxin} from "@/common/mixin.js"
+    import { deBounce } from "@/common/deBounce"
 
     export default {
         name: "Detail",
@@ -45,7 +44,6 @@
             DetailCommentInfo,
             DetailRecommendInfo,
             DetailBotBar,
-            BackTop,
             Scroll
         },
         data() {
@@ -60,11 +58,9 @@
                 recommendList: [],
                 themeYs: [],
                 getThemeYs: null,
-                currentIndex: 0,
-                isShow: false
+                currentIndex: 0
             }
         },
-        mixins: [itemListenerMinxin],
         created() {
             this.id = this.$route.params.id;
             getGoodsDetail(this.id).then(res => {
@@ -90,7 +86,7 @@
         },
         methods: {
             imgLoad() {
-                this.deBounce();
+                this.deBounceRefresh();
                 this.getThemeYs();
             },
             titleClick(index) {
@@ -106,9 +102,6 @@
                 }
                 this.isShow = Math.abs(position.y) > 1000;
             },
-            backTop() {
-                this.$refs.scroll.scrollTo(0, 0);
-            },
             addToCart() {
                 const cart = {};
                 cart.id = this.id;
@@ -122,11 +115,9 @@
                 })
             }
         },
-        mounted() {
-            this.$bus.$on("goodsImgLoadEvent", this.deBounce);
-        },
-        beforeDestroy() {
-            this.$bus.$off("goodsImgLoadEvent", this.deBounce);
+        mixins: [itemListenerMinxin, backTopMinxin],
+        destroyed() {
+          this.$bus.$off('goodsImgLoadEvent', this.goodsImgListener);
         }
     }
 </script>
